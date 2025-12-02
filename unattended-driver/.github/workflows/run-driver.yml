@@ -1,0 +1,32 @@
+name: Run Java Driver
+
+# Deze workflow draait handmatig (workflow_dispatch) en bij elke push op main
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Stap 1: Haal de code op uit je repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Stap 2: Installeer Java (optioneel, meestal al aanwezig)
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'      # Of jouw gewenste versie
+
+      # Stap 3: Build je maven project
+      - name: Build with Maven
+        run: mvn package
+
+      # Stap 4: Run je driver
+      - name: Run Java Driver
+        run: java -cp target/unattended-driver-1.0-SNAPSHOT.jar com.example.driver.App
